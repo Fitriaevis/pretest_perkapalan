@@ -15,19 +15,26 @@ router.get('/', async function (req, res, next) {
 });
 
 router.get('/create', async function (req, res, next) {
-    let rows = await Model_Pemilik.getAll();
-    res.render('kapal/create', {
-        nama_kapal: '',
-        id_pemilik: '',
-        id_dpi: '',
-        id_alat_tangkap: '',
-        data: rows
-    })
-})
+    try {
+        let pemilik = await Model_Pemilik.getAll();
+        let dpi = await Model_DPI.getAll();
+        let alat_tangkap = await Model_Alat_Tangkap.getAll();
+        res.render('kapal/create', {
+            dataPemilik: pemilik,
+            dataDPI: dpi,
+            dataAlatTangkap: alat_tangkap
+        });
+    } catch (error) {
+        console.log(error);
+        req.flash('error', 'Terjadi kesalahan pada server');
+        res.redirect('/kapal');
+    }
+});
+
 
 router.post('/store', async function (req, res, next) {
     try {
-        let { nama_kapal, id_pemilik } = req.body;
+        let { nama_kapal, id_pemilik, id_dpi, id_alat_tangkap } = req.body;
         let Data = {
             nama_kapal,
             id_pemilik,
@@ -53,9 +60,11 @@ router.get('/edit/(:id)', async function (req, res, next) {
         id: rows[0].id_kapal,
         nama_kapal: rows[0].nama_kapal,
         id_pemilik: rows[0].id_pemilik,
+        id_alat_tangkap: rows[0].id_alat_tangkap,
         id_dpi: rows[0].id_dpi,
-        data: pemilik,
-        data: dpi,
+        data_pemilik: pemilik,
+        data_dpi: dpi,
+        data_alat_tangkap: alat_tangkap,
     })
 })
 
@@ -64,10 +73,12 @@ router.get('/edit/(:id)', async function (req, res, next) {
 router.post('/update/(:id)', async function (req, res, next) {
     try {
         let id = req.params.id;
-        let { nama_kapal, id_pemilik } = req.body;
+        let { nama_kapal, id_pemilik, id_dpi, id_alat_tangkap } = req.body;
         let Data = {
             nama_kapal: nama_kapal,
             id_pemilik: id_pemilik,
+            id_dpi: id_dpi,
+            id_alat_tangkap: id_alat_tangkap,
         }
         await Model_Kapal.Update(id, Data);
         req.flash('success', 'Berhasil mengubah data');

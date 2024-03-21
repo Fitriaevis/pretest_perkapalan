@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var flash = require("express-flash");
 var session = require("express-session");
+const MemoryStore = require('session-memory-store')(session);
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -25,15 +26,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(
-  session({
-    secret: "secret",
-    resave: true,
-    saveUninitialized: true,
+app.use( session({
     cookie: {
       maxAge: 60000,
+      secure: false,
+      httpOnly: true,
+      sameSite: 'strict',
+      // domain: 'domainkitananti.com',
     },
     store: new session.MemoryStore(),
+    saveUninitialized: true,
+    resave: true,
+    secret: "secret",
   })
 );
 
@@ -45,6 +49,7 @@ app.use('/alat_tangkap', alatTangkapRouter);
 app.use('/dpi', DpiRouter);
 app.use('/pemilik', PemilikRouter);
 app.use('/kapal', KapalRouter);
+app.use('/static', express.static(path.join(__dirname,'public/sbadmin')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -61,5 +66,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
 
 module.exports = app;

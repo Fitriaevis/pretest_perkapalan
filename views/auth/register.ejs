@@ -1,0 +1,36 @@
+<%- include ('../partials/__head') %> 
+<style>
+    body {
+        background-color: #ecf0f1; /* Biru muda */
+        padding-top: 100px; /* Menambahkan ruang atas */
+    }
+    .card {
+        background-color: #34495e; /* Navy */
+        color: #fff; /* Warna teks putih */
+        box-shadow: 0 0 10px 15px rgba(0, 0, 0, 0.1); /* Menambahkan bayangan */
+    }
+</style>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card mt-5">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Register</h2>
+                    <form action="/saveusers" method="POST">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" id="password" name="password" class="form-control" required>
+                        </div>
+                        <div class="d-grid text-center">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

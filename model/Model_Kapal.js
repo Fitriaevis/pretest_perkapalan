@@ -4,13 +4,24 @@ class Model_Kapal {
 
     static async getAll() {
         return new Promise((resolve, reject) => {
-            connection.query('SELECT a.id_kapal, a.nama_kapal, a.id_pemilik, a.id_dpi, a.id_alat_tangkap, b.nama_pemilik, b.id_pemilik FROM kapal as a INNER JOIN pemilik as b ON a.id_pemilik = b.id_pemilik ORDER BY a.id_kapal DESC', (err, rows) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
+            connection.query(
+                'SELECT a.id_kapal, a.nama_kapal, a.id_pemilik, a.id_dpi, a.id_alat_tangkap, ' +
+                'b.nama_pemilik, b.id_pemilik, ' +
+                'c.nama_dpi, c.id_dpi, ' +
+                'd.nama_alat_tangkap, d.id_alat_tangkap ' + 
+                'FROM kapal as a ' +
+                'INNER JOIN pemilik as b ON a.id_pemilik = b.id_pemilik ' +
+                'INNER JOIN dpi as c ON a.id_dpi = c.id_dpi ' +
+                'INNER JOIN alat_tangkap as d ON a.id_alat_tangkap = d.id_alat_tangkap ' +
+                'ORDER BY a.id_kapal DESC', 
+                (err, rows) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(rows);
+                    }
                 }
-            });
+            );
         });
     }
 

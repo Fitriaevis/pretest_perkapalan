@@ -4,7 +4,7 @@ class Model_Pemilik{
     //mengambil data
     static async getAll(){
         return new Promise((resolve, reject) => {
-            connection.query('SELECT * FROM pemilik ORDER BY id_pemilik DESC', (err, rows) => {
+            connection.query('SELECT * FROM pemilik ORDER BY id_pemilik ASC', (err, rows) => {
                 if(err){
                     reject(err);
                 }else{
