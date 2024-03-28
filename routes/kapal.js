@@ -10,7 +10,8 @@ const Model_Alat_Tangkap = require('../model/Model_Alat_Tangkap');
 router.get('/', async function (req, res, next) {
     let rows = await Model_Kapal.getAll();
     res.render('kapal/index', {
-        data: rows
+        data: rows,
+        email: req.session.email
     });
 });
 
@@ -22,7 +23,8 @@ router.get('/create', async function (req, res, next) {
         res.render('kapal/create', {
             dataPemilik: pemilik,
             dataDPI: dpi,
-            dataAlatTangkap: alat_tangkap
+            dataAlatTangkap: alat_tangkap,
+            email: req.session.email
         });
     } catch (error) {
         console.log(error);
@@ -39,7 +41,8 @@ router.post('/store', async function (req, res, next) {
             nama_kapal,
             id_pemilik,
             id_dpi,
-            id_alat_tangkap
+            id_alat_tangkap,
+            email: req.session.email
         }
         await Model_Kapal.Store(Data);
         req.flash('success', 'Berhasil menyimpan data');
@@ -65,6 +68,7 @@ router.get('/edit/(:id)', async function (req, res, next) {
         data_pemilik: pemilik,
         data_dpi: dpi,
         data_alat_tangkap: alat_tangkap,
+        email: req.session.email
     })
 })
 
@@ -79,6 +83,7 @@ router.post('/update/(:id)', async function (req, res, next) {
             id_pemilik: id_pemilik,
             id_dpi: id_dpi,
             id_alat_tangkap: id_alat_tangkap,
+            email: req.session.email
         }
         await Model_Kapal.Update(id, Data);
         req.flash('success', 'Berhasil mengubah data');

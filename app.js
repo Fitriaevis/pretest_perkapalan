@@ -14,6 +14,8 @@ var alatTangkapRouter = require('./routes/alat_tangkap');
 var DpiRouter = require('./routes/dpi');
 var PemilikRouter = require('./routes/pemilik');
 var KapalRouter = require('./routes/kapal');
+var KategoriRouter = require('./routes/kategori');
+var ProdukRouter = require('./routes/produk');
 
 var app = express();
 
@@ -51,6 +53,8 @@ app.use('/alat_tangkap', alatTangkapRouter);
 app.use('/dpi', DpiRouter);
 app.use('/pemilik', PemilikRouter);
 app.use('/kapal', KapalRouter);
+app.use('/kategori', KategoriRouter);
+app.use('/produk', ProdukRouter);
 app.use('/static', express.static(path.join(__dirname,'public/sbadmin')));
 
 // catch 404 and forward to error handler

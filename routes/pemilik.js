@@ -6,7 +6,8 @@ const Model_Pemilik = require('../model/Model_Pemilik');
 router.get('/', async function(req, res, next){
     let rows = await Model_Pemilik.getAll();
     res.render('pemilik/index',{
-        data: rows
+        data: rows,
+        email: req.session.email
     })
 })
 
@@ -14,7 +15,8 @@ router.get('/create', function(req, res, next) {
     res.render('pemilik/create', { 
       nama_pemilik: '', 
       alamat: '', 
-      no_hp: '', 
+      no_hp: '',
+      email: req.session.email
     });
   });
 
@@ -22,7 +24,8 @@ router.post('/store', async function(req,res,next){
     try{
         let {nama_pemilik, alamat, no_hp} = req.body;
         let Data = {
-            nama_pemilik, alamat, no_hp
+            nama_pemilik, alamat, no_hp,
+            email: req.session.email
         }
         await Model_Pemilik.Store(Data);
         req.flash('success', 'Berhasil Menyimpan Data!');

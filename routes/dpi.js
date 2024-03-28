@@ -6,14 +6,16 @@ const Model_DPI = require('../model/Model_DPI');
 router.get('/', async function(req, res, next){
     let rows = await Model_DPI.getAll();
     res.render('dpi/index',{
-        data: rows
+        data: rows,
+        email: req.session.email
     })
 })
 
 router.get('/create', function(req, res, next) {
     res.render('dpi/create', { 
       nama_dpi: '', 
-      luas: '' 
+      luas: '',
+      email: req.session.email
     });
   });
 
@@ -21,7 +23,8 @@ router.post('/store', async function(req,res,next){
     try{
         let {nama_dpi, luas} = req.body;
         let Data = {
-            nama_dpi, luas
+            nama_dpi, luas,
+            email: req.session.email
         }
         await Model_DPI.Store(Data);
         req.flash('success', 'Berhasil Menyimpan Data!');
@@ -39,6 +42,7 @@ router.get('/edit/(:id)', async function(req,res, next){
         id_dpi: rows[0].id_dpi,
         nama_dpi: rows[0].nama_dpi,
         luas: rows[0].luas,
+        email: req.session.email
     })
 })
 
