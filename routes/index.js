@@ -17,59 +17,65 @@ router.get('/login', function (req, res, next) {
 });
 
 router.post('/saveusers', async (req, res) => {
-  let { email, password } = req.body;
-  let enkripsi = await bcrypt.hash(password, 10);
-  let data = {
-      email,
-      password: enkripsi
-  };
-  try {
-      await Model_Users.Store(data);
-      req.flash('success', 'Berhasil mendaftar');
-      res.redirect('/login');
-  } catch (err) {
-      console.error("Error saving user:", err);
-      req.flash('error', 'Gagal mendaftar');
-      res.redirect('/register');
-  }
+    let { email, password } = req.body;
+    let enkripsi = await bcrypt.hash(password, 10);
+    let data = {
+        email,
+        password: enkripsi
+    };
+    try {
+        await Model_Users.Store(data);
+        req.flash('success', 'Berhasil mendaftar');
+        res.redirect('/login');
+    } catch (err) {
+        console.error("Error saving user:", err);
+        req.flash('error', 'Gagal mendaftar');
+        res.redirect('/register');
+    }
 });
 
 // router log
 router.post('/log', async (req, res) => {
-  let { email, password } = req.body;
-  try {
-      let Data = await Model_Users.Login(email);
-      if (Data.length > 0) {
-          let enkripsi = Data[0].password;
-          let cek = await bcrypt.compare(password, enkripsi);
-          if (cek) {
-              req.session.userId = Data[0].id_users;
-              req.flash('success', 'Berhasil login');
-              res.redirect('/users');
-          } else {
-              req.flash('error', 'Email atau password salah');
-              res.redirect('/login');
-          }
-      } else {
-          req.flash('error', 'Akun tidak ditemukan');
-          res.redirect('/login');
-      }
-  } catch (err) {
-      console.error("Error logging in:", err);
-      req.flash('error', 'Terjadi kesalahan saat login');
-      res.redirect('/login');
-  }
+    let { email, password } = req.body;
+    try {
+        let Data = await Model_Users.Login(email);
+        if (Data.length > 0) {
+            let enkripsi = Data[0].password;
+            let cek = await bcrypt.compare(password, enkripsi);
+            if (cek) {
+                req.session.userId = Data[0].id_users;
+                if (Data[0].level_users == 1) {
+                    req.flash('success', 'Berhasil login');
+                    res.redirect('/superusers')
+                } else if(Data[0].level_users == 2){
+                    req.flash('success', 'Berhasil login');
+                    res.redirect('/users');
+                }else{
+                    res.redirect('/login');
+                }
+            } else {
+                req.flash('error', 'Email atau password salah');
+                res.redirect('/login');
+            }
+        } else {
+            req.flash('error', 'Akun tidak ditemukan');
+            res.redirect('/login');
+        }
+    } catch (err) {
+        res.redirect('/login');
+        req.flash('error', 'Error pada fungsi');
+    }
 });
 
 // router get handle logout
 router.get('/logout', function(req, res) {
-  req.session.destroy(function(err) {
-      if (err) {
-          console.error(err);
-      } else {
-          res.redirect("/login");
-      }
-  });
+    req.session.destroy(function(err) {
+        if (err) {
+            console.error(err);
+        } else {
+            res.redirect("/login");
+        }
+    });
 });
 
 module.exports = router;
