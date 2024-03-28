@@ -16,10 +16,6 @@ router.get('/', async function(req, res, next) {
           email: Data[0].email
         });
       }
-      res.render('users/index', {
-        title: 'Users Home',
-        email: Data[0].email
-      });
     } else {
       res.status(401).json({ error: 'users tidak ada' });
     }

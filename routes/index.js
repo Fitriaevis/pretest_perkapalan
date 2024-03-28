@@ -17,11 +17,12 @@ router.get('/login', function (req, res, next) {
 });
 
 router.post('/saveusers', async (req, res) => {
-    let { email, password } = req.body;
+    let { email, password, level_users } = req.body; 
     let enkripsi = await bcrypt.hash(password, 10);
     let data = {
         email,
-        password: enkripsi
+        password: enkripsi,
+        level_users 
     };
     try {
         await Model_Users.Store(data);
@@ -33,6 +34,7 @@ router.post('/saveusers', async (req, res) => {
         res.redirect('/register');
     }
 });
+
 
 // router log
 router.post('/log', async (req, res) => {
